@@ -120,13 +120,12 @@ function delta_custom_taxonomy()
 add_action('init', 'delta_custom_taxonomy');
 
 
-add_action('wp_footer', 'load_blog_filter', 36); // Write our JS below here
-
+add_action('wp_footer', 'load_blog_filter', 36); // Blog Filter
 function load_blog_filter()
 { ?>
     <script type="text/javascript">
         jQuery('.cat-list_item').on('click', function(e) {
-  e.preventDefault();
+            e.preventDefault();
             jQuery('.cat-list_item').removeClass('active');
             jQuery(this).addClass('active');
             var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
@@ -147,98 +146,165 @@ function load_blog_filter()
 <?php
 }
 
-function filter_category() 
+function filter_category()
 {
     $catSlug = $_POST['category'];
     $string = '';
-$the_query = new WP_Query( array( 
-    'post_type' => 'post',
-    'posts_per_page' => -1,
-    'category_name' => $catSlug,
-    'orderby' => 'menu_order', 
-    'order' => 'desc',
-) ); 
-  
-// The Loop
-if ( $the_query->have_posts() ) {
-    $string .= '<div class="row">';
-    while ( $the_query->have_posts() ) {
-        $the_query->the_post();
-            if ( has_post_thumbnail() ) {
-            $string .= '<div class="col-md-4">
+    $the_query = new WP_Query(array(
+        'post_type' => 'post',
+        'posts_per_page' => -1,
+        'category_name' => $catSlug,
+        'orderby' => 'menu_order',
+        'order' => 'desc',
+    ));
+
+    // The Loop
+    if ($the_query->have_posts()) {
+        $string .= '<div class="row">';
+        while ($the_query->have_posts()) {
+            $the_query->the_post();
+            if (has_post_thumbnail()) {
+                $string .= '<div class="col-md-4">
             <div class="card mb-4 box-shadow">
                 <img class="card-img-top" src="' . get_the_post_thumbnail_url()  . '" alt="Card image cap">
                 <div class="card-body">
-                    <p class="card-text">'. get_the_excerpt() .' </p>
+                    <p class="card-text">' . get_the_excerpt() . ' </p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
-                            <a class="btn btn-lg btn-primary" href="' . get_the_permalink() .'" role="button">View</a>
+                            <a class="btn btn-lg btn-primary" href="' . get_the_permalink() . '" role="button">View</a>
                         </div>
-                        <small class="text-muted">' . get_the_title() .'</small>
+                        <small class="text-muted">' . get_the_title() . '</small>
                     </div>
                 </div>
             </div>
         </div>';
-           
-            } else { 
-            // if no featured image is found
-          
+            } else {
+                // if no featured image is found
+
             }
-            }
+        }
     } else {
-    // no posts found
-}
-$string .= '</div>';
-  
-echo $string;
-  
-/* Restore original Post Data */
-wp_reset_postdata();
-exit;
+        // no posts found
+    }
+    $string .= '</div>';
+
+    echo $string;
+
+    /* Restore original Post Data */
+    wp_reset_postdata();
+    exit;
 }
 add_action('wp_ajax_filter_category', 'filter_category');
 add_action('wp_ajax_nopriv_filter_category', 'filter_category');
 
 
-add_filter( 'woocommerce_states', 'custom_woocommerce_state', 10, 1 );
-function custom_woocommerce_state( $states ) {
+add_filter('woocommerce_states', 'custom_woocommerce_state', 10, 1);
+function custom_woocommerce_state($states)
+{
     // Returning a unique state
-    return array('IN' => array('PY' => 'Pondicherry (Puducherry)','TN' => 'Tamil Nadu'));
+    return array('IN' => array('PY' => 'Pondicherry (Puducherry)', 'TN' => 'Tamil Nadu'));
 }
 
-add_action( 'woocommerce_checkout_process', 'wc_minimum_order_amount' );
-add_action( 'woocommerce_before_cart' , 'wc_minimum_order_amount' );
- 
-function wc_minimum_order_amount() {
+add_action('woocommerce_checkout_process', 'wc_minimum_order_amount');
+add_action('woocommerce_before_cart', 'wc_minimum_order_amount');
+
+function wc_minimum_order_amount()
+{
     // Set this variable to specify a minimum order value
     $minimum = 500;
 
-    if ( WC()->cart->total < $minimum ) {
+    if (WC()->cart->total < $minimum) {
 
-        if( is_cart() ) {
+        if (is_cart()) {
 
-            wc_print_notice( 
-                sprintf( 'Your current order total is %s — you must have an order with a minimum of %s to place your order ' , 
-                    wc_price( WC()->cart->total ), 
-                    wc_price( $minimum )
-                ), 'error' 
+            wc_print_notice(
+                sprintf(
+                    'Your current order total is %s — you must have an order with a minimum of %s to place your order ',
+                    wc_price(WC()->cart->total),
+                    wc_price($minimum)
+                ),
+                'error'
             );
-
         } else {
 
-            wc_add_notice( 
-                sprintf( 'Your current order total is %s — you must have an order with a minimum of %s to place your order' , 
-                    wc_price( WC()->cart->total ), 
-                    wc_price( $minimum )
-                ), 'error' 
+            wc_add_notice(
+                sprintf(
+                    'Your current order total is %s — you must have an order with a minimum of %s to place your order',
+                    wc_price(WC()->cart->total),
+                    wc_price($minimum)
+                ),
+                'error'
             );
-
         }
     }
 }
 
-add_filter( 'woocommerce_no_shipping_available_html', 'my_custom_no_shipping_message' );
-add_filter( 'woocommerce_cart_no_shipping_available_html', 'my_custom_no_shipping_message' );
-function my_custom_no_shipping_message( $message ) {
-	return __( 'A minimum of cart value Rs 100 is required. Delivery available only in pondicherry and karaikal' );
+add_filter('woocommerce_no_shipping_available_html', 'my_custom_no_shipping_message');
+add_filter('woocommerce_cart_no_shipping_available_html', 'my_custom_no_shipping_message');
+function my_custom_no_shipping_message($message)
+{
+    return __('A minimum of cart value Rs 500 is required. Delivery available only in pondicherry and karaikal');
 }
+
+
+add_action('wp_footer', 'create_contact_db', 34); // Write our JS below here
+
+function create_contact_db()
+{ ?>
+    <script type="text/javascript">
+        jQuery("#wire_contact_us").submit(function(e) {
+            e.preventDefault();
+
+            var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+
+            var data = {
+                'action': 'wire_contact_us',
+                'name': jQuery('#txtName').val(),
+                'email': jQuery('#txtEmail').val(),
+                'message': jQuery('#txtMsg').val()
+            };
+
+            // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+            jQuery.post(ajaxurl, data, function(response) {
+
+                jQuery('.outhtml').html(response);
+
+                jQuery("#wire_contact_us").trigger('reset');
+
+            });
+        });
+    </script> <?php
+            }
+
+            add_action('wp_ajax_wire_contact_us', 'wire_contact_us');
+            add_action('wp_ajax_nopriv_wire_contact_us', 'wire_contact_us');
+
+            function wire_contact_us()
+            {
+                global $wpdb;
+                $table_name = "wp_wire_contact";
+                $name =  $_POST['name'];
+                $email =  $_POST['email'];
+                $message =  $_POST['message'];
+
+                if (empty($name) || empty($email) || empty($message)) {
+                    echo "Check all the fields are correct";
+                } else {
+
+                    $dataadded = $wpdb->insert($table_name, array(
+                        'email' => $email,
+                        'name' => $name,
+                        'message' => $message
+                    ));
+
+
+                    if ($dataadded) {
+
+                        echo "Thank you for Contacting Us";
+                    } else {
+
+                        echo "Please Check the Data";
+                    }
+                }
+                wp_die();
+            }
