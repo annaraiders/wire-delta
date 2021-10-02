@@ -1,0 +1,10 @@
+2021-10-02T07:55:54+00:00 CRITICAL Allowed memory size of 1073741824 bytes exhausted (tried to allocate 532676856 bytes) in C:\xampp\htdocs\wiredelta\wp-content\themes\astra-child\functions.php on line 178
+
+2021-10-02T07:56:16+00:00 CRITICAL Allowed memory size of 1073741824 bytes exhausted (tried to allocate 532676856 bytes) in C:\xampp\htdocs\wiredelta\wp-content\themes\astra-child\functions.php on line 178
+
+2021-10-02T07:56:18+00:00 CRITICAL Allowed memory size of 1073741824 bytes exhausted (tried to allocate 528482544 bytes) in C:\xampp\htdocs\wiredelta\wp-content\themes\astra-child\functions.php on line 178
+
+2021-10-02T07:57:21+00:00 CRITICAL Allowed memory size of 1073741824 bytes exhausted (tried to allocate 532676856 bytes) in C:\xampp\htdocs\wiredelta\wp-content\themes\astra-child\functions.php on line 178
+
+2021-10-02T07:58:54+00:00 CRITICAL Allowed memory size of 1073741824 bytes exhausted (tried to allocate 532676856 bytes) in C:\xampp\htdocs\wiredelta\wp-content\themes\astra-child\functions.php on line 178
+
